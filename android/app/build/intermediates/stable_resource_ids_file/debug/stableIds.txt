@@ -1,0 +1,4 @@
+com.ruslee.somnus:style/NormalTheme = 0x7f030001
+com.ruslee.somnus:mipmap/ic_launcher = 0x7f020000
+com.ruslee.somnus:style/LaunchTheme = 0x7f030000
+com.ruslee.somnus:drawable/launch_background = 0x7f010000

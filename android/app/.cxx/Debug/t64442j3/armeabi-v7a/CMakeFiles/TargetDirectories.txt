@@ -1,0 +1,2 @@
+/Users/ruslan/Projects/somnus/android/app/.cxx/Debug/t64442j3/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/ruslan/Projects/somnus/android/app/.cxx/Debug/t64442j3/armeabi-v7a/CMakeFiles/rebuild_cache.dir

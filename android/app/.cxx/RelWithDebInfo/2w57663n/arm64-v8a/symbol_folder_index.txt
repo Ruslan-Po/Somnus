@@ -1,0 +1,1 @@
+/Users/ruslan/Projects/somnus/build/app/intermediates/cxx/RelWithDebInfo/2w57663n/obj/arm64-v8a

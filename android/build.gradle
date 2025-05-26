@@ -1,0 +1,25 @@
+// 👇 Вставляем этот блок в начало файла
+def flutterPath = "/Users/ruslan/DevTools/flutter/bin"
+System.setProperty("PATH", flutterPath + ":" + System.getenv("PATH"))
+println "Injected Flutter path: $flutterPath"
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.buildDir = "../build"
+
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+
+subprojects {
+    project.evaluationDependsOn(":app")
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}

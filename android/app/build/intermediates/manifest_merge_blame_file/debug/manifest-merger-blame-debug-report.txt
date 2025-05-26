@@ -1,0 +1,43 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.ruslee.somnus"
+4    android:versionCode="1"
+5    android:versionName="1.0.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+9        android:targetSdkVersion="34" />
+10    <!--
+11         The INTERNET permission is required for development. Specifically,
+12         the Flutter tool needs it to communicate with the running application
+13         to allow setting breakpoints, to provide hot reload, etc.
+14    -->
+15    <uses-permission android:name="android.permission.INTERNET" />
+15-->/Users/ruslan/Projects/somnus/android/app/src/debug/AndroidManifest.xml:6:5-66
+15-->/Users/ruslan/Projects/somnus/android/app/src/debug/AndroidManifest.xml:6:22-64
+16
+17    <application
+18        android:name="android.app.Application"
+19        android:debuggable="true"
+20        android:extractNativeLibs="true"
+21        android:icon="@mipmap/ic_launcher"
+22        android:label="Somnus" >
+23        <activity
+24            android:name="com.ruslee.somnus.MainActivity"
+25            android:configChanges="orientation|screenSize|keyboardHidden"
+26            android:exported="true"
+27            android:launchMode="singleTop"
+28            android:theme="@style/LaunchTheme" >
+29            <intent-filter>
+30                <action android:name="android.intent.action.MAIN" />
+31
+32                <category android:name="android.intent.category.LAUNCHER" />
+33            </intent-filter>
+34        </activity>
+35
+36        <meta-data
+37            android:name="flutterEmbedding"
+38            android:value="2" />
+39    </application>
+40
+41</manifest>
