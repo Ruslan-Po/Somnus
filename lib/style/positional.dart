@@ -25,10 +25,7 @@ class ListFadeOverlay extends StatelessWidget {
                 colors: [
                   fadeColor,
                   fadeColor.withValues(
-                    red: 0,
-                    green: 0,
-                    blue: 0,
-                    alpha: 0, // alpha канал, 0 = полностью прозрачный
+                    alpha: 0,
                   )
                 ],
               ),
@@ -45,10 +42,7 @@ class ListFadeOverlay extends StatelessWidget {
                 colors: [
                   fadeColor,
                   fadeColor.withValues(
-                    red: 0,
-                    green: 0,
-                    blue: 0,
-                    alpha: 0, // alpha канал, 0 = полностью прозрачный
+                    alpha: 0,
                   ),
                 ],
               ),
