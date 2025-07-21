@@ -29,15 +29,14 @@ class AppStyles {
     color: secondaryAccent,
     shadows: [
       Shadow(
-        offset: Offset(3, 3), // Смещение тени по X и Y
-        blurRadius: 5, // Размытие
-        color: const Color.fromARGB(50, 4, 4, 4), // Цвет тени
+        offset: Offset(3, 3),
+        blurRadius: 5,
+        color: const Color.fromARGB(50, 4, 4, 4),
       ),
       Shadow(
-          offset: Offset(-3, -3), // Смещение тени по X и Y
-          blurRadius: 5, // Размытие
-          color: const Color.fromARGB(50, 255, 255, 255) // Цвет тени
-          ),
+          offset: Offset(-3, -3),
+          blurRadius: 5,
+          color: const Color.fromARGB(50, 255, 255, 255)),
     ],
   );
 

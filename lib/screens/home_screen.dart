@@ -6,6 +6,7 @@ import 'package:somnus/control/audio_handler.dart';
 import 'package:somnus/control/blocs/player_bloc/playlist_bloc.dart';
 import 'package:somnus/control/blocs/player_bloc/playlist_events.dart';
 import 'package:somnus/control/blocs/player_bloc/playlist_state.dart';
+import 'package:somnus/models/playlist_model.dart';
 import 'package:somnus/screens/playlist_screen.dart';
 import 'package:somnus/style/positional.dart';
 import 'package:somnus/style/styles.dart';
@@ -16,6 +17,29 @@ class HomeScreen extends StatelessWidget {
     super.key,
     required this.audioHandler,
   });
+
+  void _tryCreatePlaylist(BuildContext context, List<PlaylistModel> playlists) {
+    if (playlists.length >= 10) {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text(
+            'Limit reached',
+            style: AppStyles.popTitles,
+          ),
+          content: Text('You can create up to 20 playlists only.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+    _createPlaylist(context);
+  }
 
   void _createPlaylist(BuildContext context) {
     final TextEditingController controller = TextEditingController();
@@ -182,30 +206,44 @@ class HomeScreen extends StatelessWidget {
                   );
                 },
               ),
-              const SizedBox(height: 60),
-              GestureDetector(
-                onTap: () => _createPlaylist(context),
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: AppStyles.primaryColor,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color.fromARGB(100, 0, 0, 0),
-                        blurRadius: 7,
-                        offset: const Offset(2, 2),
+              const SizedBox(height: 80),
+              BlocBuilder<PlaylistBloc, PlaylistState>(
+                builder: (context, state) {
+                  if (state is PlaylistLoadedState) {
+                    final playlists = state.playlists;
+                    final isLimit = playlists.length >= 10;
+                    return GestureDetector(
+                      onTap: isLimit
+                          ? null
+                          : () => _tryCreatePlaylist(context, playlists),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: isLimit ? Colors.grey : AppStyles.primaryColor,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromARGB(100, 0, 0, 0),
+                              blurRadius: 7,
+                              offset: const Offset(2, 2),
+                            ),
+                            BoxShadow(
+                              color: const Color.fromARGB(100, 255, 255, 255),
+                              blurRadius: 7,
+                              offset: const Offset(-2, -2),
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          isLimit ? 'Limit reached' : 'Create Mix', // NEW
+                          style: AppStyles.buttons,
+                        ),
                       ),
-                      BoxShadow(
-                        color: const Color.fromARGB(100, 255, 255, 255),
-                        blurRadius: 7,
-                        offset: const Offset(-2, -2),
-                      ),
-                    ],
-                  ),
-                  child: Text('Create Mix', style: AppStyles.buttons),
-                ),
+                    );
+                  }
+                  return SizedBox.shrink();
+                },
               ),
             ],
           ),

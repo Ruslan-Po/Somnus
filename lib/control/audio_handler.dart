@@ -19,7 +19,6 @@ class LocalAudioHandler extends BaseAudioHandler {
     await session.configure(AudioSessionConfiguration.music());
   }
 
-  // Fade volume utility
   Future<void> _fadeVolume(
     AudioPlayer player, {
     required double from,
@@ -35,7 +34,6 @@ class LocalAudioHandler extends BaseAudioHandler {
     }
   }
 
-  /// Play a sound by asset [path]
   Future<void> playSound(String path, {double volume = 0.5}) async {
     final fullAssetPath = 'assets/$path';
     final player = AudioPlayer();
@@ -73,7 +71,6 @@ class LocalAudioHandler extends BaseAudioHandler {
     }
   }
 
-  /// Stop all sounds and reset
   Future<void> stopAll() async {
     for (final player in _players.values) {
       final currentVol = player.volume;
@@ -88,7 +85,6 @@ class LocalAudioHandler extends BaseAudioHandler {
     cancelSleepTimer();
   }
 
-  /// Toggle play/pause for a specific [path]
   Future<void> togglePlayPause(String path) async {
     final player = _players[path];
     if (player == null) return;
@@ -99,7 +95,6 @@ class LocalAudioHandler extends BaseAudioHandler {
     }
   }
 
-  /// Set volume for a specific [path]
   Future<void> setVolume(String path, double vol) async {
     final player = _players[path];
     if (player != null) {
@@ -107,7 +102,6 @@ class LocalAudioHandler extends BaseAudioHandler {
     }
   }
 
-  /// Get current playing state as a Stream for a [path]
   Stream<bool> playingStream(String path) {
     return _playingControllers
         .putIfAbsent(
@@ -123,7 +117,6 @@ class LocalAudioHandler extends BaseAudioHandler {
     return player?.playing ?? false;
   }
 
-  /// Start sleep timer to stop all sounds after [duration]
   void startSleepTimer(Duration duration) {
     _sleepTimer?.cancel();
     _sleepTimer = Timer(duration, () async {
@@ -138,7 +131,6 @@ class LocalAudioHandler extends BaseAudioHandler {
 
   @override
   Future<void> play() async {
-    // Запускает все загруженные треки
     for (final player in _players.values) {
       if (!player.playing) {
         await player.play();
@@ -158,11 +150,5 @@ class LocalAudioHandler extends BaseAudioHandler {
   @override
   Future<void> stop() async {
     await stopAll();
-  }
-
-  @override
-  Future<void> addQueueItem(MediaItem mediaItem) async {
-    // Реализуй по необходимости, если нужно управление очередью (не обязательно)
-    super.addQueueItem(mediaItem);
   }
 }

@@ -81,7 +81,12 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
   }
 
   void _showAddSoundDialog(BuildContext context, PlaylistModel playlist) {
-    final sounds = getAvailableSounds();
+    final allSounds = getAvailableSounds();
+    final existingPaths = playlist.tracks.map((s) => s.filePath).toSet();
+
+    // Оставляем только те, которых нет в плейлисте
+    final availableToAdd =
+        allSounds.where((s) => !existingPaths.contains(s.filePath)).toList();
 
     showDialog(
       context: context,
@@ -94,51 +99,53 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
         ),
         content: SizedBox(
           width: double.maxFinite,
-          child: GridView.builder(
-            shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 1,
-            ),
-            itemCount: sounds.length,
-            itemBuilder: (context, index) {
-              final sound = sounds[index];
-              return GestureDetector(
-                onTap: () {
-                  context.read<PlaylistBloc>().add(
-                        AddSoundEvent(playlist.id, sound),
-                      );
-                  Navigator.pop(context);
-                },
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.asset(
-                          sound.iconPath ?? '',
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Icon(Icons.music_note, size: 40);
-                          },
-                        ),
+          child: availableToAdd.isEmpty
+              ? const Center(child: Text('All sounds already added'))
+              : GridView.builder(
+                  shrinkWrap: true,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 1,
+                  ),
+                  itemCount: availableToAdd.length,
+                  itemBuilder: (context, index) {
+                    final sound = availableToAdd[index];
+                    return GestureDetector(
+                      onTap: () {
+                        context.read<PlaylistBloc>().add(
+                              AddSoundEvent(playlist.id, sound),
+                            );
+                        Navigator.pop(context);
+                      },
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.asset(
+                                sound.iconPath ?? '',
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Icon(Icons.music_note, size: 40);
+                                },
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            sound.title,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 12),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      sound.title,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 12),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  ],
+                    );
+                  },
                 ),
-              );
-            },
-          ),
         ),
       ),
     );
