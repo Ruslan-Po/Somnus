@@ -27,7 +27,7 @@ class HomeScreen extends StatelessWidget {
             'Limit reached',
             style: AppStyles.popTitles,
           ),
-          content: Text('You can create up to 20 playlists only.'),
+          content: Text('You can create up to 10 playlists only.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -42,41 +42,12 @@ class HomeScreen extends StatelessWidget {
   }
 
   void _createPlaylist(BuildContext context) {
-    final TextEditingController controller = TextEditingController();
-
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        backgroundColor: AppStyles.accentColor,
-        title: Center(
-          child: Text(
-            'New Playlist',
-            style: AppStyles.popTitles,
-          ),
-        ),
-        content: TextFormField(
-          controller: controller,
-          decoration: const InputDecoration(hintText: 'Playlist name'),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            style: ButtonStyle(),
-            onPressed: () {
-              final title = controller.text.trim();
-              if (title.isNotEmpty) {
-                context.read<PlaylistBloc>().add(CreatePlaylistEvent(title));
-              }
-              Navigator.pop(context);
-            },
-            child: Text(
-              'Create',
-            ),
-          ),
-        ],
+      builder: (_) => CreatePlaylistDialog(
+        onCreate: (title) {
+          context.read<PlaylistBloc>().add(CreatePlaylistEvent(title));
+        },
       ),
     );
   }
@@ -236,7 +207,7 @@ class HomeScreen extends StatelessWidget {
                           ],
                         ),
                         child: Text(
-                          isLimit ? 'Limit reached' : 'Create Mix', // NEW
+                          isLimit ? 'Limit reached' : 'Create Mix',
                           style: AppStyles.buttons,
                         ),
                       ),
@@ -249,6 +220,69 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class CreatePlaylistDialog extends StatefulWidget {
+  final void Function(String) onCreate;
+
+  const CreatePlaylistDialog({super.key, required this.onCreate});
+
+  @override
+  State<CreatePlaylistDialog> createState() => _CreatePlaylistDialogState();
+}
+
+class _CreatePlaylistDialogState extends State<CreatePlaylistDialog> {
+  final TextEditingController _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: AppStyles.accentColor,
+      title: Center(
+        child: Text(
+          'New Playlist',
+          style: AppStyles.popTitles,
+        ),
+      ),
+      content: TextFormField(
+        controller: _controller,
+        focusNode: _focusNode,
+        decoration: const InputDecoration(hintText: 'Playlist name'),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            final title = _controller.text.trim();
+            if (title.isNotEmpty) {
+              widget.onCreate(title);
+              Navigator.pop(context);
+            }
+          },
+          child: Text('Create'),
+        ),
+      ],
     );
   }
 }
