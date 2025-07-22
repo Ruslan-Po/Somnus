@@ -84,7 +84,6 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
     final allSounds = getAvailableSounds();
     final existingPaths = playlist.tracks.map((s) => s.filePath).toSet();
 
-    // Оставляем только те, которых нет в плейлисте
     final availableToAdd =
         allSounds.where((s) => !existingPaths.contains(s.filePath)).toList();
 
@@ -195,10 +194,9 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                             left: 30,
                             child: Builder(
                               builder: (innerContext) => GestureDetector(
-                                onTap: () async {
-                                  await widget.audioHandler.stopAll();
-                                  if (!innerContext.mounted) return;
+                                onTap: () {
                                   Navigator.of(innerContext).pop();
+                                  widget.audioHandler.stopAll();
                                 },
                                 child: const Icon(
                                   Icons.arrow_back_ios,

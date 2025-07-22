@@ -44,7 +44,7 @@ class _PlayerWidgetState extends State<PlayerWidget> {
   void didUpdateWidget(covariant PlayerWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.stopSignal) {
-      widget.audioHandler.togglePlayPause(widget.sound.filePath);
+      widget.audioHandler.pauseSound(widget.sound.filePath);
     }
   }
 

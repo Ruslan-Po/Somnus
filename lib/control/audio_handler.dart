@@ -23,7 +23,7 @@ class LocalAudioHandler extends BaseAudioHandler {
     AudioPlayer player, {
     required double from,
     required double to,
-    Duration duration = const Duration(seconds: 2),
+    Duration duration = const Duration(seconds: 1),
     int steps = 20,
   }) async {
     final stepDur = duration ~/ steps;
@@ -71,8 +71,17 @@ class LocalAudioHandler extends BaseAudioHandler {
     }
   }
 
+  Future<void> pauseSound(String path) async {
+    final player = _players[path];
+    if (player != null && player.playing) {
+      await player.pause();
+      _playingControllers[path]?.add(false);
+    }
+  }
+
   Future<void> stopAll() async {
-    for (final player in _players.values) {
+    final players = List<AudioPlayer>.from(_players.values);
+    for (final player in players) {
       final currentVol = player.volume;
       await _fadeVolume(player, from: currentVol, to: 0);
       await player.stop();
